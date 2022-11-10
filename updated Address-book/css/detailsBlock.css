@@ -1,0 +1,55 @@
+/* edit and del option in details block */
+.options a{
+    text-decoration: none;
+    color: black;
+}
+
+.details-block{
+    position: absolute;
+    width: 600px;
+    margin: 50px;
+    margin-left: 75px;
+    padding: 10px;
+    font-weight: bolder;
+}
+
+.details-block p span{
+    font-weight: normal;
+}
+
+.options{
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    padding: 8px;
+    cursor: pointer;
+    height: 18px;
+    font-size: 120%;
+}
+
+.options img{
+    width: 15px;
+    margin-right: 2px;
+    transform: scale(1,0.80);
+    margin-bottom: -2px;
+}
+
+.edit-option{
+    margin-right: 30px;
+}
+
+.user-name{
+    margin: 0px;
+}
+
+.user-name,.options{
+    display: inline-block;
+}
+
+.contact-details p{
+    margin: 0px;
+}
+
+.contacts-block,.details-block{
+    display:inline-block;
+}

@@ -1,0 +1,95 @@
+/* styles for contact form */
+html,body{
+    margin: 0px;
+    padding: 0px;
+}
+
+#mainBlock{
+    margin-bottom: 100px;
+}
+
+.contact-form{
+    position: absolute;
+    width: max-content;
+    height: min-content;
+    box-shadow: 5px 5px 30px #3f4040;
+    margin-top: 25px;
+    margin-left: 70px;
+    padding: 30px;
+}
+
+.input-block{
+    margin-bottom:12px;
+}
+
+/* inpu tag labels */
+.tag-name{
+    margin: 0px;
+    font-weight: bolder;
+    margin-bottom:3px;
+}
+
+.input-block input{
+    height: 35px;
+    width: 550px;
+    margin-right: 75px;
+}
+
+.contact-details{
+    display: flex;
+}
+
+#mobileNumber{
+    margin-right: 48px;
+}
+
+.mobile-details input,.landline-details input{
+    width: 251px;
+}
+
+textarea{
+    resize: none;
+}
+
+.buttons-block{
+    float: right;
+}
+
+.button{
+    padding: 10px 35px;
+    border-radius: 0px;
+    border-width: 0px;
+    color: white;
+}
+
+.button:hover{
+    filter: brightness(70%);
+    cursor: pointer;
+
+}
+
+.button[type='reset']{
+    background-color: #8d0201;
+    
+}
+
+.button[type='submit']{
+    background-color: #468d01;
+}
+
+
+/* aligining form and contact details */
+.contact-form,.contacts-block{
+    display: inline-block;
+}
+
+.error{
+    color: red;
+    font-style: italic;
+    margin-top: 0px;
+    font-size: 85%;
+}
+
+/* input:focus{
+    background-color: #8d0201;
+} */

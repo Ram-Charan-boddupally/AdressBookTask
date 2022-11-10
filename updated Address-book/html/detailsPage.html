@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../../task1/styles/stylesheet.css">  <!-- stylesheet for header -->
+        <link rel="stylesheet" href="../css/contactsList.css"> <!-- stylesheet for the contacts list -->
+        <link rel="stylesheet" href="../css/detailsBlock.css">
+        <title>Address Book</title>
+
+        <!-- jQuery CDN link -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    </head>
+    <body>
+        <div class="container">
+            <!--Header of the page of the headlining and navigation bar -->
+                <header>
+                    <div class="page_title">Address Book</div>
+                    <!--Navigation section of the page -->   
+                    <nav class="navigation">
+                        <a class="active" href="../html/home.html">HOME</a>
+                        <a href="../html/contactForm.html?edit=false">+ADD</a>
+                        <img id="blogIcon" src="../../task1/images/blog-icon.png" alt="blog-icon" width="25" height="25">
+                    </nav>
+                </header>
+
+                <!--Content of the page -->
+                <div id="mainBlock">
+                    <div class="contacts-block">
+                        <h3>CONTACTS</h3>
+                        <ul class="contacts-list"> </ul>
+                    </div>
+                    
+                    <div class="details-block">
+                        <h1 class="user-name"></h1>
+                        <div class="options">
+                            <a class="edit-option"><img src="../images/edit1.jpg">EDIT</a>
+                            <a class="delete-option"><img src="../images/delete1.png">DELETE</a>
+                        </div>
+                
+                        <p class="email-address">Email: <span></span></p>
+                
+                        <div class="contact-details">
+                            <p class="mobile-number">Mobile: <span></span></p>
+                            <p class="land-line">Landline: <span></span></p>
+                        </div>
+                
+                        <p class="website">Website: <span></span></p>
+                
+                        <p class="address">Address: <span></span></p>
+                    </div>
+                        
+                </div>
+            </div>
+    <script type= "module" src="../jQ2ts/init.js"></script>
+    </body>
+</html>

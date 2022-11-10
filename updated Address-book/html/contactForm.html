@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- stylesheets -->
+        <link rel="stylesheet" href="../../task1/styles/stylesheet.css">  <!-- stylesheet for header -->
+        <link rel="stylesheet" href="../css/contactsList.css"> <!-- stylesheet for the contacts list -->
+        <link rel="stylesheet" href="../css/contactForm.css"> <!-- stylesheet for form -->
+        <title>Address Book</title>
+        <link href="http://fonts.cdnfonts.com/css/century-gothic-paneuropean" rel="stylesheet">
+        <link rel="stylesheet" href="../fonts/Noto_Sans/NotoSans-Thin.ttf">
+        <link href="http://fonts.cdnfonts.com/css/oslo" rel="stylesheet">
+
+        <!-- jQuery CDN link -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    </head>
+
+    <body>
+        <!-- using container as the primary element or block of the page -->
+        <div class="container">
+        <!--Header of the page of the headlining and navigation bar -->
+            <header>
+                <div class="page_title">Address Book</div>
+                <!--Navigation section of the page -->   
+                <nav class="navigation">
+                    <a href="../html/home.html">HOME</a>
+                    <a class="active" ref="../html/contactForm.html">+ADD</a>
+                    <img id="blogIcon" src="../../task1/images/blog-icon.png" alt="blog-icon" width="25" height="25">
+                </nav>
+            </header>
+
+            <!--Content of the page -->
+            <div id="mainBlock">
+                <div class="contacts-block">
+                    <h3>CONTACTS</h3>
+                    <ul class="contacts-list"></ul>
+                </div>                
+                <!-- contacts input form -->
+                <div class="contact-form">
+                    <div class="input-block">
+                        <p class="tag-name">Name <span class="error">*</span> </p>
+                        <input type="text" name="name" id="name">    
+                    </div>
+        
+                    <div class="input-block">
+                        <p class=tag-name>Email <span class="error">*</span> </p>
+                        <input type="email" name="email" id="email">    
+                    </div>
+
+                    <div class="contact-details">
+                        <div class="input-block mobile-details ">
+                            <p class="tag-name">Mobile <span class="error">*</span> </p>
+                            <input type="tel" name="contactInformation" id="mobileNumber" placeholder="91XXXXXXXXXX">    
+                        </div>
+                        <div class="input-block landline-details">
+                            <p class="tag-name">Landline</p>
+                            <input type="tel" name="contactInformation" id="contactInformation">
+                        </div>
+                    </div>
+
+                    <div class="input-block">
+                        <p class="tag-name">Web site <span class="error">*</span> </p>
+                        <input type="url" name="website" id="website">    
+                    </div>
+        
+                    <div class="input-block">
+                        <p class="tag-name">Address</p>
+                        <textarea cols="72" rows="7" name="address" id="address"></textarea>    
+                    </div>
+        
+                    <div class="buttons-block">
+                        <button type="submit" class="button">Add</button>
+                        <button type="reset" class="button">Reset</button>
+                    </div>
+                </div>
+            </div>
+    <script type= "module" src="../jQ2ts/init.js"></script>
+    </body>
+</html>
