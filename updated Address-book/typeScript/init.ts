@@ -1,4 +1,4 @@
-import {EmployeeList} from './models.js'
+import {Employee, EmployeeList} from './models.js'
 import {FormView,ContactsListView,DetailsView} from './views.js';
 
 // employee list
@@ -13,9 +13,10 @@ let employeeData:any =  [{name:'Praveen Battula', email: 'praveen@technovert.com
         {name:'deepak', email: 'deepak@technovert.com', contactInformation: ['91 9292929292','040 30 1231211'], website: 'http://www.technovert.com', address: ''}
     ]
 
-$(document).on('DOMContentLoaded',function(){
+
+document.addEventListener('DOMContentLoaded',function(){
     let url = location.pathname.split("/html")[1];
-    let model:any;
+    let model:EmployeeList;
 
     // inittialising the model data 
     if(sessionStorage.length > 1){
@@ -39,7 +40,7 @@ $(document).on('DOMContentLoaded',function(){
             detailsBlock = new DetailsView(model,empId);
             contactsList = new ContactsListView(model,detailsBlock);
 
-            $(".contacts-list li#"+empId).addClass("selected");
+            (document.querySelector(".contacts-list li#"+empId) as HTMLElement).classList.add("selected");
             break;
 
         case (url.startsWith("/contactForm.html")):
@@ -52,13 +53,13 @@ $(document).on('DOMContentLoaded',function(){
                     contactForm.bindSubmitForm(contactsList,false);
                     contactForm.bindResetForm();
                 }else{
-                    let empId = new URLSearchParams(location.search).get("employee") as string;
+                    let empId:string = new URLSearchParams(location.search).get("employee") as string;
 
                     contactForm.fillForm(model.getEmployee(empId));
-                    $("button[type='submit']").text("Update");
+                    (document.querySelector("button[type='submit']") as HTMLElement).textContent = "Update";
                     contactForm.bindSubmitForm(contactsList,true,empId);
-                    
-                    $("button[type='reset']").text("Cancel");
+
+                    (document.querySelector("button[type='reset']") as HTMLElement).textContent = "Cancel";
                     contactForm.bindCancelEditForm();                    
                 }
                 break;

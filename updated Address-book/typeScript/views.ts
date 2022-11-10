@@ -3,70 +3,83 @@ import {displayErrorMsg} from "./validation.js";
 
 // views
 class FormView{
-    model:any;
+    model:EmployeeList;
     details:any;
     fieldValidationStatus: Boolean = false;
 
-    constructor(model:any){
+    constructor(model:EmployeeList){
         this.model = model;
         this.details = {};
         this.bindValidationListners();
     }
 
-    fillForm(employee:any){
-        $("contact-form").attr("id",employee.id);
-        $("#name").val(employee.name);
-        $("#email").val(employee.email);
-        $("#mobileNumber").val(employee.contactInformation[0]);
-        $("#contactInformation").val(employee.contactInformation[1]);
-        $("#website").val(employee.website);
-        $("#address").html(employee.address);
+    fillForm(employee:Employee):void{
+        
+        (document.querySelector(".contact-form") as HTMLElement).id = employee.id; 
+
+        (document.querySelector("#name") as HTMLInputElement).value = employee.name;
+        (document.querySelector("#email") as HTMLInputElement).value = employee.email;
+        (document.querySelector("#mobileNumber") as HTMLInputElement).value = employee.contactInformation[0];
+        (document.querySelector("#contactInformation") as HTMLInputElement).value = employee.contactInformation[1];
+        (document.querySelector("#website") as HTMLInputElement).value = employee.website;
+        (document.querySelector("#address") as HTMLElement).textContent = employee.address;
     }
     
-    bindValidationListners(){
+    bindValidationListners():void{
         let gblStatus:boolean[] = [false,false,false,false];
-        let obj = this;
+        let obj:FormView = this;
 
-        $('input').on('input',function(event){
+        let inputElements = document.querySelectorAll('input');
+        
+        inputElements.forEach((element:HTMLElement)=>{
+            element.addEventListener('input', function(event:Event){
 
-            switch(this.id){
-                case 'name':
-                    gblStatus[0] = displayErrorMsg("#name", /^[a-zA-Z ]+$/);
-                    break;
-                case 'email':
-                    gblStatus[1] = displayErrorMsg("#email",/^[a-zA-Z]+([a-zA-Z0-9]|[_\.-])+@[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+/); 
-                    break;
-                case 'mobileNumber':
-                    gblStatus[2] = displayErrorMsg("#mobileNumber", /^(91)[6-9][0-9]{9}$/);
-                    break;
-                case 'website':
-                    gblStatus[3] = displayErrorMsg("#website", /^(https|http):\/\/[a-zA-Z]+([a-zA-Z0-9]|[.:_\/\-%])+/);
-                    break;
-                case 'contactInformation':
-                    gblStatus[0] = displayErrorMsg("#name", /^[a-zA-Z ]+$/);;
-                    gblStatus[1] = displayErrorMsg("#email",/^[a-zA-Z]+([a-zA-Z0-9]|[_\.-])+@[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+/); 
-                    gblStatus[2] = displayErrorMsg("#mobileNumber", /^(91)[6-9][0-9]{9}$/);
-                    gblStatus[3] = displayErrorMsg("#website", /^(https|http):\/\/[a-zA-Z]+([a-zA-Z0-9]|[.:_\/\-%])+/);
-                    break
-            }
-            obj.fieldValidationStatus = gblStatus.every(bool => bool === true);
-            // console.log(obj.fieldValidationStatus,gblStatus)
-        });
+                switch(this.id){
+                    case 'name':
+                        gblStatus[0] = displayErrorMsg("#name", /^[a-zA-Z ]+$/);
+                        break;
+                    case 'email':
+                        gblStatus[1] = displayErrorMsg("#email",/^[a-zA-Z]+([a-zA-Z0-9]|[_\.-])+@[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+/); 
+                        break;
+                    case 'mobileNumber':
+                        gblStatus[2] = displayErrorMsg("#mobileNumber", /^(91)[6-9][0-9]{9}$/);
+                        break;
+                    case 'website':
+                        gblStatus[3] = displayErrorMsg("#website", /^(https|http):\/\/[a-zA-Z]+([a-zA-Z0-9]|[.:_\/\-%])+/);
+                        break;
+                    case 'contactInformation':
+                        gblStatus[0] = displayErrorMsg("#name", /^[a-zA-Z ]+$/);;
+                        gblStatus[1] = displayErrorMsg("#email",/^[a-zA-Z]+([a-zA-Z0-9]|[_\.-])+@[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+/); 
+                        gblStatus[2] = displayErrorMsg("#mobileNumber", /^(91)[6-9][0-9]{9}$/);
+                        gblStatus[3] = displayErrorMsg("#website", /^(https|http):\/\/[a-zA-Z]+([a-zA-Z0-9]|[.:_\/\-%])+/);
+                        break
+                }
+                obj.fieldValidationStatus = gblStatus.every(bool => bool === true);
+                // console.log(obj.fieldValidationStatus,gblStatus)
+            });
+       })
     }
 
-    checkEmptyField(){
+    checkEmptyField():boolean{
         let field: any;
-        $('input').each(function(){
-            if(this.id != 'contactInformation' && (this as HTMLInputElement).value == ""){
-                if(!field) field = this;
-                if($(this).next().length == 0)
-                    $(this).parent().append($("<p class='error'></p>").text((this as HTMLInputElement).id+" can't be empty"))
-                $(this).trigger('focus')
-            }else if(this.id != 'contactInformation' && (this as HTMLInputElement).value != ""){
-                if($(this).next().length > 0)
-                    $(this).next().remove();
+
+        let inputElements = document.querySelectorAll('input');
+        
+        inputElements.forEach((element:HTMLInputElement)=>{
+            if(element.id != 'contactInformation' && element.value == ""){
+                if(!field) field = element;
+                if(!element.nextSibling){
+                    let ele = document.createElement('p');
+                    ele.classList.add("error");
+                    ele.textContent = element.id +" can't be empty";
+                }
+
+                element.focus();
+            }else if(element.id != 'contactInformation' && element.value != ""){
+                if(element.nextSibling)
+                    element.nextSibling.remove();
             }
-        });
+        })
 
         if(field){
             console.log(field.focus())
@@ -76,13 +89,13 @@ class FormView{
         return true;
     }
 
-    bindSubmitForm(handler:any,edit:boolean,empId?:string){
+    bindSubmitForm(handler:any,edit:boolean,empId?:string):void{
         let obj = this;
-        $("button[type='submit']").on('click',function(){
+        document.querySelector("button[type='submit']")?.addEventListener('click',function(){
             obj.details.contactInformation = [];
 
             if(edit){
-                let status = [true,true,true,true];
+                let status:boolean[] = [true,true,true,true];
                 status[0] = displayErrorMsg("#name", /^[a-zA-Z ]+$/);;
                 status[1] = displayErrorMsg("#email",/^[a-zA-Z]+([a-zA-Z0-9]|[_\.-])+@[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+/); 
                 status[2] = displayErrorMsg("#mobileNumber", /^(91)[6-9][0-9]{9}$/);
@@ -90,17 +103,18 @@ class FormView{
             
                 obj.fieldValidationStatus = status.every(field => field == true);
             }
-            let isFieldEmpty = obj.checkEmptyField();
+
+            let isFieldEmpty:boolean = obj.checkEmptyField();
             if( isFieldEmpty == true && obj.fieldValidationStatus){
-                obj.details.name = $("#name").val();
-                obj.details.email = $("#email").val();
-                obj.details.contactInformation.push($("#mobileNumber").val());
-                obj.details.contactInformation.push($("#contactInformation").val());
-                obj.details.website = $("#website").val();
-                obj.details.address = $("#address").val()!;
+                obj.details.name = (document.querySelector("#name") as HTMLInputElement).value;
+                obj.details.email = (document.querySelector("#email") as HTMLInputElement).value;
+                obj.details.contactInformation.push((document.querySelector("#mobileNumber") as HTMLInputElement).value);
+                obj.details.contactInformation.push((document.querySelector("#contactInformation") as HTMLInputElement).value);
+                obj.details.website = (document.querySelector("#website") as HTMLInputElement).value;
+                obj.details.address = (document.querySelector("#address") as HTMLInputElement).value;
                 obj.details.address.replace("\n", "<br>");
 
-                if(edit) obj.model.editEmployee(empId,obj.details);
+                if(edit && empId) obj.model.editEmployee(empId,obj.details)
                 else obj.model.addEmployee(obj.details);
     
                 handler.displayContacts(obj.model.employeeList);
@@ -109,20 +123,21 @@ class FormView{
                 window.sessionStorage.setItem("employeeList",JSON.stringify(obj.model));
                 window.alert("contact Succesfully submited");
                 window.location.href = '../html/home.html';
+            
             }else if(isFieldEmpty == true && obj.fieldValidationStatus == false){
                 window.alert("invalid input")
                 let field:any;
                 if(!displayErrorMsg("#name", /^[a-zA-Z ]+$/)){
-                    if(!field) field = $("#name").trigger('focus');
+                    if(!field) field = (document.querySelector("#name") as HTMLInputElement).focus();
                 }
                 if(!displayErrorMsg("#email",/^[a-zA-Z]+([a-zA-Z0-9]|[_\.-])+@[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+/)){
-                    if(!field) field = $("#email").focus();
+                    if(!field) field = (document.querySelector("#email") as HTMLInputElement).focus();
                 }; 
                 if(!displayErrorMsg("#mobileNumber", /^(91)[6-9][0-9]{9}$/)){
-                    if(!field) field = $("#mobileNumber").focus();
+                    if(!field) field = (document.querySelector("#mobileNumber") as HTMLInputElement).focus();
                 };
                 if(!displayErrorMsg("#website", /^(https|http):\/\/[a-zA-Z]+([a-zA-Z0-9]|[.:_\/\-%])+/)){
-                    if(!field) field = $("#website").focus();
+                    if(!field) field = (document.querySelector("#website") as HTMLInputElement).focus();
                 };
 
                 if(field){
@@ -131,19 +146,21 @@ class FormView{
             }else if(!isFieldEmpty){
                 alert("please fill the required fields");
             } 
+
         })
     }
     
     bindResetForm():void{
-        $("button[type='reset']").click(function(){
-            $('.input-block p.error').remove();
-            $('.input-block input').val("");
-            $('.input-block textarea').text("");
+
+        document.querySelector("button[type='reset']")?.addEventListener('click',function(){
+                (document.querySelector('.input-block p.error') as HTMLElement).remove();
+                (document.querySelector('.input-block input') as HTMLInputElement).value = "";
+                (document.querySelector('.input-block textarea') as HTMLElement).textContent = "";
         });
     }
 
     bindCancelEditForm():void{
-        $("button[type='reset']").click(function(){
+        document.querySelector("button[type='reset']")?.addEventListener('click',function(){
             location.href="../html/home.html";
         })
     }
@@ -159,45 +176,58 @@ class ContactsListView{
         if(detailsView) this.detailsView = detailsView;
     }
 
-    createContact(object:any):JQuery<HTMLElement>{
+    createContact(contactObject:any):HTMLElement{
         let self = this;
         // creating p tags for employee information and list for empoloyee details
-        let listElement = $("<li></li>").attr({ "id":object.id, "class": "candit-details"})
-                                        .append(
-                                            $("<p class='candit-name'></p>").text(object['name']),
-                                            $("<p class='candit-email'></p>").text(object['email']),
-                                            $("<p class='candit-contact'></p>").text(object['contactInformation'][0]))
-                                        .on('click',function(){
-                                            let url = location.pathname.split("/html")[1];
-                                            if(url.startsWith('/detailsPage.html')){
-                                                $('.candit-details.selected').removeClass("selected")
-                                                
-                                                let url:any = window.location;
-                                                url = new URL(url);
-                                                url.searchParams.set('employee', $(this).attr("id"));
-                                                window.history.pushState({},'',url)
-                                                console.log(self.model.getEmployee($(this).attr("id") as string))
-                                                self.detailsView?.fillData(self.model.getEmployee( $(this).attr("id") as string));
+        let canditNode = document.createElement('li');
+        canditNode.id = contactObject.id;
+        canditNode.classList.add("candit-details");
 
-                                                $("#"+$(this).attr("id")).addClass('selected');
-                                            }else
-                                                location.href = '../html/detailsPage.html?'+'employee='+$(this).attr("id");
-                                        });
+        let canditName = document.createElement('p')
+        canditName.className = 'candit-name';
+        canditName.innerText = contactObject['name'];
 
-        return listElement;
+        let canditEmail = document.createElement('p')
+        canditEmail.className = 'candit-email';
+        canditEmail.innerText = contactObject['email'];
+
+        let canditContact = document.createElement('p')
+        canditContact.className = 'candit-contact';
+        canditContact.innerText = contactObject['contactInformation'][0];
+
+        canditNode.append(canditName,canditEmail,canditContact);
+        
+        canditNode.addEventListener('click',function(this){
+            let url = window.location.pathname.split("/html")[1];
+            if(url.startsWith('/detailsPage.html')){
+                document.querySelector('.candit-details.selected')?.classList.remove("selected")
+                
+                let url:any = window.location;
+                url = new URL(url);
+                url.searchParams.set('employee', this.id);
+                window.history.pushState({},'',url)
+                console.log(self.model.getEmployee(this.id))
+                self.detailsView?.fillData(self.model.getEmployee(this.id));
+
+                this.classList.add('selected');
+            }else
+                location.href = '../html/detailsPage.html?'+'employee='+this.id;
+        })
+
+        return canditNode;
     }
 
     displayContacts():void{
         // removing the existing child elements of ul
-        $(".contacts-list").empty();
+        (document.querySelector(".contacts-list") as HTMLElement).innerHTML = "";
 
         // appending child elements to the list
         if(this.model.getListLength() ==  0){
-            $(".contacts-list").html("<p>No contacts Available</p>");
+            (document.querySelector(".contacts-list") as HTMLElement).innerHTML = "<p>No contacts Available</p>";
         }else{
             this.model.employeeList.forEach((employee:any) => {
                 let empInfo = this.createContact(employee);
-                $(".contacts-list").append(empInfo);
+                (document.querySelector(".contacts-list") as HTMLElement).appendChild(empInfo);
             });
         }
     }
@@ -209,7 +239,7 @@ class DetailsView{
     constructor(employeeModel:EmployeeList, empId:string){
         this.model = employeeModel;
 
-        $(".details-block").attr("id",empId);
+        (document.querySelector(".details-block") as HTMLElement).id = empId;
         let employee:Employee = this.model.getEmployee(empId);
 
         this.fillData(employee);
@@ -218,29 +248,29 @@ class DetailsView{
         this.bindDeleteInformation(empId);
     }
 
-    fillData(employee:Employee):void{
+    fillData(employee:Employee){
         if(employee){
+            (document.querySelector(".user-name") as HTMLElement).textContent = employee.name;
+            (document.querySelector(".email-address span") as HTMLElement).textContent = employee.email;
+            (document.querySelector(".mobile-number span") as HTMLElement).textContent = employee.contactInformation[0];
+            (document.querySelector(".land-line span") as HTMLElement).textContent = employee.contactInformation[1] != "" ? employee.contactInformation[1] : "NA";
+            (document.querySelector(".website span") as HTMLElement).textContent = employee.website;
+            (document.querySelector(".address span") as HTMLElement).innerHTML = employee.address != "" ? employee.address.replace("\n","<br>") : "NA";
 
-            $(".user-name").text(employee.name);
-            $(".email-address span").text(employee.email);
-            $(".mobile-number span").text(employee.contactInformation[0]);
-            $(".land-line span").text(employee.contactInformation[1] != "" ? employee.contactInformation[1] : "NA");
-            $(".website span").text(employee.website);
-            $(".address span").html(employee.address != "" ? employee.address.replace("\n","<br>") : "NA");
         }else{
-            $(".details-block").html("<h1>NO CONTACT EXISTS</h1>");
+            (document.querySelector(".details-block") as HTMLElement).innerHTML = "<h1>NO CONTACT EXISTS</h1>";
         }
     }
         
-    bindEditInformation():void{
-        $(".edit-option").on('click', function(){
-            location.href = "../html/contactForm.html?edit=true&employee="+$(".details-block").attr("id");
+    bindEditInformation(){
+        document.querySelector(".edit-option")?.addEventListener('click', function(){
+            location.href = "../html/contactForm.html?edit=true&employee="+document.querySelector(".details-block")!.id;
         })
     }
 
-    bindDeleteInformation(empId:string):void{
+    bindDeleteInformation(empId:string){
         let obj:DetailsView = this;
-        $(".delete-option").on('click', function(){
+        document.querySelector(".delete-option")?.addEventListener('click',function(){
             obj.model.deleteEmployee(empId);
             sessionStorage.setItem("employeeList", JSON.stringify(obj.model));
             location.href = '../html/home.html';

@@ -1,15 +1,19 @@
 export function displayErrorMsg(tag:string, pattern:RegExp):boolean{
     let status = true;
-    let data:any = $(tag).val();
+    let element:HTMLInputElement = (document.querySelector(tag) as HTMLInputElement);
 
-    if(data.replace(" ","").search(pattern) == -1){
-        if($(tag).next().length == 0)
-            $(tag).parent().append($("<p class='error'></p>").text(tag.replace("#","")+" is Invalid"));
+    if(element.value.replace(" ","").search(pattern) == -1){
+        if(element.nextElementSibling === null){
+            let ele: HTMLElement = document.createElement('p');
+            ele.classList.add("error");
+            ele.innerText = tag.replace("#","")+" is Invalid";
+            (element.parentElement as HTMLElement).appendChild(ele); 
+        }
         
         status =  false;
     }else{
-        if($(tag).next().length != 0)
-            $(tag).next().remove();
+        if(element.nextElementSibling !== null)
+            element.nextElementSibling.remove();
 
         status = true;
     }
