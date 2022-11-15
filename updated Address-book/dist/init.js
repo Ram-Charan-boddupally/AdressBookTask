@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             else {
                 let empId = new URLSearchParams(location.search).get("employee");
-                contactForm.fillForm(model.getEmployee(empId));
+                contactForm.fillForm(model.employeeList.getEmployee(empId));
                 document.querySelector("button[type='submit']").textContent = "Update";
                 contactForm.bindSubmitForm(contactsList, true, empId);
                 document.querySelector("button[type='reset']").textContent = "Cancel";

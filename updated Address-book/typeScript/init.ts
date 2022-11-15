@@ -1,8 +1,8 @@
 import {Employee, EmployeeList} from './models.js'
 import {FormView,ContactsListView,DetailsView} from './views.js';
-
+import {EmployeeInformation} from './employee'
 // employee list
-let employeeData:any =  [{name:'Praveen Battula', email: 'praveen@technovert.com', contactInformation: ['91 923 345 2342','040 30 1231211'], website: 'http://www.technovert.com', address: '123 now here \n some street,\n madhapur Hyderabad 500033'},
+let employeeData:EmployeeInformation[] =  [{name:'Praveen Battula', email: 'praveen@technovert.com', contactInformation: ['91 923 345 2342','040 30 1231211'], website: 'http://www.technovert.com', address: '123 now here \n some street,\n madhapur Hyderabad 500033'},
         {name:'Chandermani Arora', email: 'chandermani@technovert.com', contactInformation: ['91 9292929292','040 30 1231211'], website: 'http://www.technovert.com', address: '123 now here \n some street,\n madhapur Hyderabad 500033'},
         {name:'Shashi Pagadala', email: 'vijay@technovert.com', contactInformation: ['91 9292929292','040 30 1231211'], website: 'http://www.technovert.com', address: '123 now here \n some street,\n madhapur Hyderabad 500033'},
         {name:'Vijay Yalamanchili', email: 'vijay@technovert.com', contactInformation: ['91 9292929292'], website: 'http://www.technovert.com', address: '123 now here \n some street,\n madhapur Hyderabad 500033'},
@@ -15,7 +15,7 @@ let employeeData:any =  [{name:'Praveen Battula', email: 'praveen@technovert.com
 
 
 document.addEventListener('DOMContentLoaded',function(){
-    let url = location.pathname.split("/html")[1];
+    let url:string = location.pathname.split("/html")[1];
     let model:EmployeeList;
 
     // inittialising the model data 
@@ -54,8 +54,7 @@ document.addEventListener('DOMContentLoaded',function(){
                     contactForm.bindResetForm();
                 }else{
                     let empId:string = new URLSearchParams(location.search).get("employee") as string;
-
-                    contactForm.fillForm(model.getEmployee(empId));
+                    contactForm.fillForm(model.employeeList.getEmployee(empId));
                     (document.querySelector("button[type='submit']") as HTMLElement).textContent = "Update";
                     contactForm.bindSubmitForm(contactsList,true,empId);
 

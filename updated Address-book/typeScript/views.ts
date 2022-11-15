@@ -1,6 +1,6 @@
 import { Employee, EmployeeList } from "./models.js";
 import {displayErrorMsg} from "./validation.js";
-
+import {EmployeeInformation} from './employee'
 // views
 class FormView{
     model:EmployeeList;
@@ -13,19 +13,19 @@ class FormView{
         this.bindValidationListners();
     }
 
-    fillForm(employee:Employee):void{
+    public fillForm(employee:Employee):void{
         
         (document.querySelector(".contact-form") as HTMLElement).id = employee.id; 
 
         (document.querySelector("#name") as HTMLInputElement).value = employee.name;
         (document.querySelector("#email") as HTMLInputElement).value = employee.email;
         (document.querySelector("#mobileNumber") as HTMLInputElement).value = employee.contactInformation[0];
-        (document.querySelector("#contactInformation") as HTMLInputElement).value = employee.contactInformation[1];
+        (document.querySelector("#contactInformation") as HTMLInputElement).value = <string>employee.contactInformation[1];
         (document.querySelector("#website") as HTMLInputElement).value = employee.website;
         (document.querySelector("#address") as HTMLElement).textContent = employee.address;
     }
     
-    bindValidationListners():void{
+    public bindValidationListners():void{
         let gblStatus:boolean[] = [false,false,false,false];
         let obj:FormView = this;
 
@@ -60,7 +60,7 @@ class FormView{
        })
     }
 
-    checkEmptyField():boolean{
+    public checkEmptyField():boolean{
         let field: any;
 
         let inputElements = document.querySelectorAll('input');
@@ -89,7 +89,7 @@ class FormView{
         return true;
     }
 
-    bindSubmitForm(handler:any,edit:boolean,empId?:string):void{
+    public bindSubmitForm(handler:any,edit:boolean,empId?:string):void{
         let obj = this;
         document.querySelector("button[type='submit']")?.addEventListener('click',function(){
             obj.details.contactInformation = [];
@@ -114,8 +114,8 @@ class FormView{
                 obj.details.address = (document.querySelector("#address") as HTMLInputElement).value;
                 obj.details.address.replace("\n", "<br>");
 
-                if(edit && empId) obj.model.editEmployee(empId,obj.details)
-                else obj.model.addEmployee(obj.details);
+                if(edit && empId) obj.model.employeeList.editEmployee(empId,obj.details)
+                else obj.model.employeeList.addEmployee(obj.details);
     
                 handler.displayContacts(obj.model.employeeList);
     
@@ -150,7 +150,7 @@ class FormView{
         })
     }
     
-    bindResetForm():void{
+    public bindResetForm():void{
 
         document.querySelector("button[type='reset']")?.addEventListener('click',function(){
                 (document.querySelector('.input-block p.error') as HTMLElement).remove();
@@ -159,7 +159,7 @@ class FormView{
         });
     }
 
-    bindCancelEditForm():void{
+    public bindCancelEditForm():void{
         document.querySelector("button[type='reset']")?.addEventListener('click',function(){
             location.href="../html/home.html";
         })
@@ -176,7 +176,7 @@ class ContactsListView{
         if(detailsView) this.detailsView = detailsView;
     }
 
-    createContact(contactObject:any):HTMLElement{
+    private createContact(contactObject:any):HTMLElement{
         let self = this;
         // creating p tags for employee information and list for empoloyee details
         let canditNode = document.createElement('li');
@@ -206,8 +206,8 @@ class ContactsListView{
                 url = new URL(url);
                 url.searchParams.set('employee', this.id);
                 window.history.pushState({},'',url)
-                console.log(self.model.getEmployee(this.id))
-                self.detailsView?.fillData(self.model.getEmployee(this.id));
+                console.log(self.model.employeeList.getEmployee(this.id))
+                self.detailsView?.fillData(self.model.employeeList.getEmployee(this.id));
 
                 this.classList.add('selected');
             }else
@@ -217,12 +217,12 @@ class ContactsListView{
         return canditNode;
     }
 
-    displayContacts():void{
+    public displayContacts():void{
         // removing the existing child elements of ul
         (document.querySelector(".contacts-list") as HTMLElement).innerHTML = "";
 
         // appending child elements to the list
-        if(this.model.getListLength() ==  0){
+        if(this.model.employeeList.getListLength() ==  0){
             (document.querySelector(".contacts-list") as HTMLElement).innerHTML = "<p>No contacts Available</p>";
         }else{
             this.model.employeeList.forEach((employee:any) => {
@@ -240,7 +240,7 @@ class DetailsView{
         this.model = employeeModel;
 
         (document.querySelector(".details-block") as HTMLElement).id = empId;
-        let employee:Employee = this.model.getEmployee(empId);
+        let employee:Employee = this.model.employeeList.getEmployee(empId);
 
         this.fillData(employee);
 
@@ -248,12 +248,12 @@ class DetailsView{
         this.bindDeleteInformation(empId);
     }
 
-    fillData(employee:Employee){
+    public fillData(employee:Employee){
         if(employee){
             (document.querySelector(".user-name") as HTMLElement).textContent = employee.name;
             (document.querySelector(".email-address span") as HTMLElement).textContent = employee.email;
             (document.querySelector(".mobile-number span") as HTMLElement).textContent = employee.contactInformation[0];
-            (document.querySelector(".land-line span") as HTMLElement).textContent = employee.contactInformation[1] != "" ? employee.contactInformation[1] : "NA";
+            (document.querySelector(".land-line span") as HTMLElement).textContent = employee.contactInformation[1] != "" ? <string>employee.contactInformation[1] : "NA";
             (document.querySelector(".website span") as HTMLElement).textContent = employee.website;
             (document.querySelector(".address span") as HTMLElement).innerHTML = employee.address != "" ? employee.address.replace("\n","<br>") : "NA";
 
@@ -262,16 +262,16 @@ class DetailsView{
         }
     }
         
-    bindEditInformation(){
+    public bindEditInformation(){
         document.querySelector(".edit-option")?.addEventListener('click', function(){
             location.href = "../html/contactForm.html?edit=true&employee="+document.querySelector(".details-block")!.id;
         })
     }
 
-    bindDeleteInformation(empId:string){
+    public bindDeleteInformation(empId:string){
         let obj:DetailsView = this;
         document.querySelector(".delete-option")?.addEventListener('click',function(){
-            obj.model.deleteEmployee(empId);
+            obj.model.employeeList.deleteEmployee(empId);
             sessionStorage.setItem("employeeList", JSON.stringify(obj.model));
             location.href = '../html/home.html';
         })

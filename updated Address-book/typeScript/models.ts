@@ -1,8 +1,9 @@
-class Employee{
+import {EmployeeInformation} from './employee'
+class Employee implements EmployeeInformation{
     id:any;
     name:string;
     email:string;
-    contactInformation:string[];
+    contactInformation: [string,string?];
     website: string;
     address: string;
 
@@ -16,7 +17,7 @@ class Employee{
         this.contactInformation[1] = object.contactInformation[1] != null ? object.contactInformation[1] : "";
     }
 
-    editInformation(object:any):void{
+    editInformation(object:any):Employee{
         this.name = object.name != null ? object.name : this.name;
         this.email = object.email != null ? object.email : this.email;
         this.contactInformation[0] = object.contactInformation[0] != null ? object.contactInformation[0] : this.contactInformation[0];
@@ -24,13 +25,15 @@ class Employee{
 
         this.website = object.webiste != null ? object.webiste : this.website;
         this.address = object.address != null ? object.address : this.address;
+
+        return object
     }
 }
 
 class EmployeeList{
     employeeList: any;
 
-    constructor(employeeDetailsList:any){
+    constructor(employeeDetailsList:EmployeeInformation[]){
         this.employeeList = []
         // if employee list is not null append details
         if(employeeDetailsList){
@@ -42,7 +45,7 @@ class EmployeeList{
         }
     }
 
-    getEmpId(empId:string|undefined):string{
+    private getEmpId(empId:string|undefined):string{
         empId = 'emp';
         if(this.getListLength() > 0) empId += parseInt(this.employeeList[this.getListLength()-1].id.split("emp")[1])+1;
         else empId += 0;
@@ -50,39 +53,50 @@ class EmployeeList{
         return empId;
     }
 
-    addEmployee(employeeDetails:any):void{
+    private addEmployee(employeeDetails:any):Employee{
         employeeDetails.id = this.getEmpId(employeeDetails.id);
 
         let emp = new Employee(employeeDetails);
         this.employeeList.push(emp)
+        return emp;
     }
 
-    editEmployee(id:string, employeeDetails:any):void{
+    private editEmployee(id:string, employeeDetails:any):Employee|null{
         console.log(this.employeeList)
         for(const emp of this.employeeList){
             if(emp.id == id){
                 emp.editInformation(employeeDetails);
-                break; }
-            }     
+                return employeeDetails;
+            }
+        }
+        return null;
     }
     
-    deleteEmployee(empId: string):any{
+    private deleteEmployee(empId: string):boolean{
+        let status = false;
+        let actualLength = this.employeeList.getListLength()
+
         this.employeeList = this.employeeList.filter((employee:any) => employee.id != empId);
+        if(actualLength > this.employeeList.getListLength){
+            status = true;
+        }
+
+        return status;
     }
 
-    getListLength():number{
+    private getListLength():number{
         return this.employeeList.length;
     }
     
-    getEmployee(empId:string){
-        return this.employeeList.filter((employee:any) => employee.id == empId)[0]
+    private getEmployee(empId:string):Employee{
+        return this.employeeList.filter((employee:Employee) => employee.id == empId)[0]
     }
 
-    toJSON():any{
+    private toJSON():any{
         return this.employeeList;
     }
     
-    static fromJSON(json:any){
+    public static fromJSON(json:any){
         let obj = new EmployeeList(json);
         return obj;
     }

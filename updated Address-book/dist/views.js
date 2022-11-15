@@ -97,9 +97,9 @@ class FormView {
                 obj.details.address = document.querySelector("#address").value;
                 obj.details.address.replace("\n", "<br>");
                 if (edit && empId)
-                    obj.model.editEmployee(empId, obj.details);
+                    obj.model.employeeList.editEmployee(empId, obj.details);
                 else
-                    obj.model.addEmployee(obj.details);
+                    obj.model.employeeList.addEmployee(obj.details);
                 handler.displayContacts(obj.model.employeeList);
                 obj.bindResetForm();
                 window.sessionStorage.setItem("employeeList", JSON.stringify(obj.model));
@@ -184,8 +184,8 @@ class ContactsListView {
                 url = new URL(url);
                 url.searchParams.set('employee', this.id);
                 window.history.pushState({}, '', url);
-                console.log(self.model.getEmployee(this.id));
-                (_b = self.detailsView) === null || _b === void 0 ? void 0 : _b.fillData(self.model.getEmployee(this.id));
+                console.log(self.model.employeeList.getEmployee(this.id));
+                (_b = self.detailsView) === null || _b === void 0 ? void 0 : _b.fillData(self.model.employeeList.getEmployee(this.id));
                 this.classList.add('selected');
             }
             else
@@ -197,7 +197,7 @@ class ContactsListView {
         // removing the existing child elements of ul
         document.querySelector(".contacts-list").innerHTML = "";
         // appending child elements to the list
-        if (this.model.getListLength() == 0) {
+        if (this.model.employeeList.getListLength() == 0) {
             document.querySelector(".contacts-list").innerHTML = "<p>No contacts Available</p>";
         }
         else {
@@ -212,7 +212,7 @@ class DetailsView {
     constructor(employeeModel, empId) {
         this.model = employeeModel;
         document.querySelector(".details-block").id = empId;
-        let employee = this.model.getEmployee(empId);
+        let employee = this.model.employeeList.getEmployee(empId);
         this.fillData(employee);
         this.bindEditInformation();
         this.bindDeleteInformation(empId);
@@ -240,7 +240,7 @@ class DetailsView {
         var _a;
         let obj = this;
         (_a = document.querySelector(".delete-option")) === null || _a === void 0 ? void 0 : _a.addEventListener('click', function () {
-            obj.model.deleteEmployee(empId);
+            obj.model.employeeList.deleteEmployee(empId);
             sessionStorage.setItem("employeeList", JSON.stringify(obj.model));
             location.href = '../html/home.html';
         });

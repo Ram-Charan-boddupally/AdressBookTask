@@ -15,6 +15,7 @@ class Employee {
         this.contactInformation[1] = object.contactInformation[1] != null ? object.contactInformation[1] : this.contactInformation[0];
         this.website = object.webiste != null ? object.webiste : this.website;
         this.address = object.address != null ? object.address : this.address;
+        return object;
     }
 }
 class EmployeeList {
@@ -42,18 +43,26 @@ class EmployeeList {
         employeeDetails.id = this.getEmpId(employeeDetails.id);
         let emp = new Employee(employeeDetails);
         this.employeeList.push(emp);
+        return emp;
     }
     editEmployee(id, employeeDetails) {
         console.log(this.employeeList);
         for (const emp of this.employeeList) {
             if (emp.id == id) {
                 emp.editInformation(employeeDetails);
-                break;
+                return employeeDetails;
             }
         }
+        return null;
     }
     deleteEmployee(empId) {
+        let status = false;
+        let actualLength = this.employeeList.getListLength();
         this.employeeList = this.employeeList.filter((employee) => employee.id != empId);
+        if (actualLength > this.employeeList.getListLength) {
+            status = true;
+        }
+        return status;
     }
     getListLength() {
         return this.employeeList.length;
